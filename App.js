@@ -9,6 +9,11 @@ import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase('todo.db');
 
 function HomeScreen({ navigation }) {
+  const [lists, setLists] = useState([
+    { title: 'Kill cat', done: false, id: '0' },
+    { title: 'Kill elephant', done: true, id: '1' },
+  ]);
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -24,12 +29,31 @@ function HomeScreen({ navigation }) {
   });
 
   function addList() {
-    console.log('ADD TODO LIST');
+    let newList = {
+      title: 'Sample new list',
+      done: false,
+      id: `${lists.length}`,
+    };
+    setLists([...lists]);
+  }
+
+  function renderItem({ item }) {
+    return (
+      <View
+        style={{ padding: 20, borderBottomColor: '#ccc', borderBottomWidth: 1 }}
+      >
+        <Text style={{ textAlign: 'left', fontSize: 16 }}>{item.title}</Text>
+      </View>
+    );
   }
 
   return (
     <View style={styles.container}>
-      <Text></Text>
+      <FlatList
+        style={{ width: '100%' }}
+        data={lists}
+        renderItem={renderItem}
+      />
     </View>
   );
 }
