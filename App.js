@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, Text, View, Button } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -6,6 +5,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as SQLite from 'expo-sqlite';
+
+const db = SQLite.openDatabase('todo.db');
 
 function HomeScreen({ navigation }) {
   useEffect(() => {
@@ -20,14 +21,14 @@ function HomeScreen({ navigation }) {
         </TouchableOpacity>
       ),
     });
-  }, []);
+  });
 
   function addList() {
     console.log('ADD TODO LIST');
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text></Text>
     </View>
   );
