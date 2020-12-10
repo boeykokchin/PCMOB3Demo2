@@ -8,8 +8,8 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('todo.db');
 
-function HomeScreen({ navigation }) {
-  const [lists, setLists] = useState([
+function NotesScreen({ navigation }) {
+  const [notes, setNotes] = useState([
     { title: 'Kill cat', done: false, id: '0' },
     { title: 'Kill elephant', done: true, id: '1' },
   ]);
@@ -17,7 +17,7 @@ function HomeScreen({ navigation }) {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={addList}>
+        <TouchableOpacity onPress={addNote}>
           <MaterialCommunityIcons
             name='circle-edit-outline'
             size={40}
@@ -28,13 +28,14 @@ function HomeScreen({ navigation }) {
     });
   });
 
-  function addList() {
-    let newList = {
-      title: 'Sample new list',
+  function addNote() {
+    let newNote = {
+      title: 'Sample new note',
       done: false,
-      id: `${lists.length}`,
+      id: `${notes.length}`,
     };
-    setLists([...lists]);
+    setNotes([...notes]);
+    navigation.navigate('Add Note');
   }
 
   function renderItem({ item }) {
@@ -51,9 +52,49 @@ function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <FlatList
         style={{ width: '100%' }}
-        data={lists}
+        data={notes}
         renderItem={renderItem}
       />
+    </View>
+  );
+}
+
+const InnerStack = createStackNavigator();
+
+function NotesStack() {
+  return (
+    <InnerStack.Navigator>
+      <InnerStack.Screen
+        name='Notes'
+        component={NotesScreen}
+        options={{
+          headerTitle: 'Notes App',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            fontSize: 30,
+          },
+          headerStyle: {
+            height: 120,
+            backgroundColor: 'yellow',
+            borderBottomColor: '#ccc',
+            borderBottomWidth: 1,
+          },
+        }}
+      ></InnerStack.Screen>
+    </InnerStack.Navigator>
+  );
+}
+
+function AddScreen({ navigation }) {
+  return (
+    <View style={styles.container}>
+      <Text>Add Screen</Text>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{ padding: 10 }}
+      >
+        <Text style={{ color: 'orange' }}>Dismiss</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -63,8 +104,17 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerTintColor: 'orange' }}>
-        <Stack.Screen name='TODO' component={HomeScreen} />
+      <Stack.Navigator
+        mode='modal'
+        headerMode='none'
+        screenOptions={{ headerTintColor: 'orange' }}
+      >
+        <Stack.Screen
+          name='Notes Stack'
+          component={NotesStack}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name='Add Note' component={AddScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
