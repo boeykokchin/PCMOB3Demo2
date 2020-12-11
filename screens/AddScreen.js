@@ -15,7 +15,7 @@ export default function AddScreen({ navigation }) {
       ></TextInput>
       <View style={styles.buttons}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate('Notes', { text })}
           style={[styles.button, styles.submitButton]}
         >
           <Text style={styles.buttonText}>Submit</Text>

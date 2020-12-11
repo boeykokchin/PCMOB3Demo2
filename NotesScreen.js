@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function NotesScreen({ navigation }) {
+export default function NotesScreen({ navigation, route }) {
   const [notes, setNotes] = useState([
     { title: 'Kill cat', done: false, id: '0' },
     { title: 'Kill elephant', done: true, id: '1' },
@@ -27,6 +27,17 @@ export default function NotesScreen({ navigation }) {
       ),
     });
   });
+
+  useEffect(() => {
+    if (route.params?.text) {
+      const newNote = {
+        title: route.params.text,
+        done: false,
+        id: `${notes.length}`,
+      };
+      setNotes([...notes, newNote]);
+    }
+  }, [route.params?.text]);
 
   function addNote() {
     // let newNote = {
