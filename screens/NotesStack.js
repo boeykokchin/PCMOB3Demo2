@@ -11,7 +11,7 @@ export default function NotesStack() {
         name='Notes'
         component={NotesScreen}
         options={{
-          headerTitle: 'Notes App',
+          headerTitle: 'TODO',
           headerTitleStyle: {
             fontWeight: 'bold',
             fontSize: 30,

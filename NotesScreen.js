@@ -7,12 +7,45 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as SQLite from 'expo-sqlite';
+import * as FileSystem from 'expo-file-system';
+
+const db = SQLite.openDatabase('notes.db');
+console.log(FileSystem.documentDirectory);
 
 export default function NotesScreen({ navigation, route }) {
-  const [notes, setNotes] = useState([
-    { title: 'Kill cat', done: false, id: '0' },
-    { title: 'Kill elephant', done: true, id: '1' },
-  ]);
+  const [notes, setNotes] = useState([]);
+
+  function refreshNotes() {
+    db.transaction(
+      (tx) => {
+        tx.executeSql(
+          'SELECT * FROM notes',
+          null,
+          (txObj, { rows: { _array } }) => setNotes(_array),
+          (txObj, error) => console.log('Error', error)
+        );
+      },
+      null,
+      null
+    );
+  }
+
+  useEffect(() => {
+    db.transaction(
+      (tx) => {
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS
+        notes
+        (id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT,
+          done INT);`
+        );
+      },
+      null,
+      refreshNotes
+    );
+  }, []);
 
   useEffect(() => {
     navigation.setOptions({
@@ -30,14 +63,28 @@ export default function NotesScreen({ navigation, route }) {
 
   useEffect(() => {
     if (route.params?.text) {
-      const newNote = {
-        title: route.params.text,
-        done: false,
-        id: `${notes.length}`,
-      };
-      setNotes([...notes, newNote]);
+      db.transaction(
+        (tx) => {
+          tx.executeSql('INSERT INTO notes (done, title) VALUES (0, ?)', [
+            route.params.text,
+          ]);
+        },
+        null,
+        refreshNotes
+      );
     }
   }, [route.params?.text]);
+
+  // useEffect(() => {
+  //   if (route.params?.text) {
+  //     const newNote = {
+  //       title: route.params.text,
+  //       done: false,
+  //       id: `${notes.length}`,
+  //     };
+  //     setNotes([...notes, newNote]);
+  //   }
+  // }, [route.params?.text]);
 
   function addNote() {
     // let newNote = {
@@ -65,6 +112,7 @@ export default function NotesScreen({ navigation, route }) {
         style={{ width: '100%' }}
         data={notes}
         renderItem={renderItem}
+        keyExtractor={(item) => `${item.id}`}
       />
     </View>
   );
