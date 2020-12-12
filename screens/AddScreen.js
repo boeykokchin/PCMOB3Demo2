@@ -8,11 +8,23 @@ export default function AddScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text style={styles.label}>Add TODO</Text>
-      <TextInput
-        style={styles.textInput}
-        value={text}
-        onChangeText={(newText) => setText(newText)}
-      ></TextInput>
+      <View
+        style={{
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <TextInput
+          style={styles.textInput}
+          value={text}
+          onChangeText={(newText) => setText(newText)}
+          multiline={true}
+          numberOfLines={3}
+          textAlignVertical='top'
+          fontSize={20}
+        ></TextInput>
+      </View>
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => navigation.navigate('Notes', { text })}
@@ -28,8 +40,10 @@ export default function AddScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <Text style={{ marginTop: 40, color: 'grey' }}>You typed:</Text>
-      <Text style={{ color: '#333', marginTop: 10 }}>{text}</Text>
+      {
+        //   <Text style={{ marginTop: 40, color: 'grey' }}>You typed:</Text>
+        // <Text style={{ color: '#333', marginTop: 10 }}>{text}</Text>
+      }
     </View>
   );
 }
@@ -37,7 +51,7 @@ export default function AddScreen({ navigation }) {
 const styles = StyleSheet.create({
   label: {
     fontWeight: 'bold',
-    fontSize: 24,
+    fontSize: 30,
   },
 
   textInput: {

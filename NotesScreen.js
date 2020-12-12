@@ -48,20 +48,6 @@ export default function NotesScreen({ navigation, route }) {
   }, []);
 
   useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={addNote}>
-          <MaterialCommunityIcons
-            name='circle-edit-outline'
-            size={40}
-            style={{ color: 'orange', marginRight: 20 }}
-          />
-        </TouchableOpacity>
-      ),
-    });
-  });
-
-  useEffect(() => {
     if (route.params?.text) {
       db.transaction(
         (tx) => {
@@ -74,6 +60,20 @@ export default function NotesScreen({ navigation, route }) {
       );
     }
   }, [route.params?.text]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={addNote}>
+          <MaterialCommunityIcons
+            name='plus-circle-outline'
+            size={60}
+            style={{ color: 'orange', marginRight: 20 }}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  });
 
   // useEffect(() => {
   //   if (route.params?.text) {
@@ -96,12 +96,45 @@ export default function NotesScreen({ navigation, route }) {
     navigation.navigate('Add Note');
   }
 
+  function deleteNote(id) {
+    console.log('deleting item stage', id);
+  }
+
   function renderItem({ item }) {
     return (
       <View
-        style={{ padding: 20, borderBottomColor: '#ccc', borderBottomWidth: 1 }}
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          padding: 20,
+          borderBottomColor: '#ccc',
+          borderBottomWidth: 1,
+        }}
       >
-        <Text style={{ textAlign: 'left', fontSize: 16 }}>{item.title}</Text>
+        <View style={{ width: 270 }}>
+          <Text
+            dataDetectorType='all'
+            numberOfLines={3}
+            ellipsizeMode='head'
+            style={{ fontSize: 20 }}
+          >
+            {item.title}
+          </Text>
+        </View>
+        <TouchableOpacity onPress={() => deleteNote(item.id)}>
+          <MaterialCommunityIcons
+            name='checkbox-marked-circle-outline'
+            size={30}
+            style={{ color: 'blue' }}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => deleteNote(item.id)}>
+          <MaterialCommunityIcons
+            name='close-circle-outline'
+            size={30}
+            style={{ color: 'red' }}
+          />
+        </TouchableOpacity>
       </View>
     );
   }
