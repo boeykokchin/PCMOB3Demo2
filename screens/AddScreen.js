@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function AddScreen({ navigation }) {
   const [text, setText] = useState('');
@@ -19,24 +20,25 @@ export default function AddScreen({ navigation }) {
           style={styles.textInput}
           value={text}
           onChangeText={(newText) => setText(newText)}
-          multiline={true}
-          numberOfLines={3}
+          multiline={false}
+          numberOfLines={1}
           textAlignVertical='top'
           fontSize={20}
+          placeholder='TODO TODAY...'
         ></TextInput>
       </View>
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => navigation.navigate('Notes', { text })}
-          style={[styles.button, styles.submitButton]}
+          style={styles.button}
         >
-          <Text style={styles.buttonText}>Submit</Text>
+          <MaterialCommunityIcons name='upload' size={60} color='green' />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={[styles.button, styles.cancelButton]}
+          style={styles.button}
         >
-          <Text style={styles.buttonText}>Cancel</Text>
+          <MaterialCommunityIcons name='cancel' size={50} color='orange' />
         </TouchableOpacity>
       </View>
 
