@@ -2,13 +2,24 @@ import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as SQLite from 'expo-sqlite';
 
-export default function AddScreen({ navigation }) {
-  const [addText, setAddText] = useState('');
+const db = SQLite.openDatabase('notes.db');
+
+export default function EditScreen({ navigation, route }) {
+  const [editText, setEditText] = useState(`${route.params.title}`);
+  const [rowEdited, setRowEdited] = useState(0);
+
+  console.log('EditScreen:', route.params.key, route.params.title);
+
+  let key = route.params.key;
+
+  console.log(key);
+  console.log('EditScreen:', editText);
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={[styles.label, { color: 'blue' }]}>ADD</Text>
+      <Text style={[styles.label, { color: 'green' }]}>EDIT</Text>
       <View
         style={{
           width: '100%',
@@ -18,18 +29,30 @@ export default function AddScreen({ navigation }) {
       >
         <TextInput
           style={styles.textInput}
-          value={addText}
-          onChangeText={(newAddText) => setAddText(newAddText)}
+          value={editText}
+          onChangeText={(newEditText) => setEditText(newEditText)}
           multiline={false}
           numberOfLines={1}
           textAlignVertical='top'
           fontSize={20}
-          placeholder='TODO TODAY...'
+          // placeholder='hello'
         ></TextInput>
       </View>
       <View style={styles.buttons}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Notes', { addText })}
+          onPress={() => {
+            db.transaction(
+              (tx) => {
+                tx.executeSql(
+                  `UPDATE notes SET title = ${editText} WHERE key=${key};`
+                );
+              },
+              null,
+              null
+            );
+            setRowEdited(1);
+            navigation.navigate('Notes', { key });
+          }}
           style={styles.button}
         >
           <MaterialCommunityIcons name='upload' size={60} color='green' />
@@ -43,8 +66,8 @@ export default function AddScreen({ navigation }) {
       </View>
 
       {
-        //   <Text style={{ marginTop: 40, color: 'grey' }}>You typed:</Text>
-        // <Text style={{ color: '#333', marginTop: 10 }}>{text}</Text>
+        // <Text style={{ marginTop: 40, color: 'grey' }}>You typed:</Text>
+        // <Text style={{ color: '#333', marginTop: 10 }}>{editText}</Text>
       }
     </View>
   );

@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import NotesStack from './screens/NotesStack';
 import AddScreen from './screens/AddScreen';
+import EditScreen from './screens/EditScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen name='Add Note' component={AddScreen} />
+        <Stack.Screen name='Edit Note' component={EditScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
