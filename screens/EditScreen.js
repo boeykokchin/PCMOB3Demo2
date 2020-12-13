@@ -8,7 +8,6 @@ const db = SQLite.openDatabase('notes.db');
 
 export default function EditScreen({ navigation, route }) {
   const [editText, setEditText] = useState(`${route.params.title}`);
-  const [rowEdited, setRowEdited] = useState(0);
 
   console.log('EditScreen:', route.params.key, route.params.title);
 
@@ -41,17 +40,7 @@ export default function EditScreen({ navigation, route }) {
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => {
-            db.transaction(
-              (tx) => {
-                tx.executeSql(
-                  `UPDATE notes SET title = ${editText} WHERE key=${key};`
-                );
-              },
-              null,
-              null
-            );
-            setRowEdited(1);
-            navigation.navigate('Notes', { key });
+            navigation.navigate('Notes', { editText, key });
           }}
           style={styles.button}
         >
@@ -65,10 +54,8 @@ export default function EditScreen({ navigation, route }) {
         </TouchableOpacity>
       </View>
 
-      {
-        // <Text style={{ marginTop: 40, color: 'grey' }}>You typed:</Text>
-        // <Text style={{ color: '#333', marginTop: 10 }}>{editText}</Text>
-      }
+      <Text style={{ marginTop: 40, color: 'grey' }}>You typed:</Text>
+      <Text style={{ color: '#333', marginTop: 10 }}>{editText}</Text>
     </View>
   );
 }

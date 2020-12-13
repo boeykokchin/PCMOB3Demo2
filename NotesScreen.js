@@ -66,10 +66,20 @@ export default function NotesScreen({ navigation, route }) {
   }, [route.params?.addText]);
 
   useEffect(() => {
-    if (route.params?.rowEdited) {
-      refreshNotes();
+    if ((route.params?.editText, route.params?.key)) {
+      console.log('from notes screen, route.params.editText', route.params);
+      db.transaction(
+        (tx) => {
+          tx.executeSql('UPDATE notes SET title = ? WHERE key = ?', [
+            route.params?.editText,
+            route.params?.key,
+          ]);
+        },
+        null,
+        refreshNotes
+      );
     }
-  }, [route.params?.rowEdited]);
+  }, [route.params?.editText, route.params?.key]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -112,8 +122,8 @@ export default function NotesScreen({ navigation, route }) {
       key: rowKey,
       title: rowTitle,
     });
-    console.log('editRow (NotesScreen):', rowKey);
-    console.log('title (NotesScreen):', rowTitle);
+    console.log('editRow from NotesScreen):', rowKey);
+    console.log('title from NotesScreen):', rowTitle);
   };
 
   const doneRow = (rowMap, rowKey) => {
